@@ -105,26 +105,62 @@ INSERT INTO Employee (
     department,
     salary,
     hire_date,
-    phone_number,
     email,
     employee_status
 )
 VALUES
-('John', 'Smith', 'Airport Manager', 'Administration', 85000, '2022-03-15', '01012345678', 'john.smith@airport.com', 'Active'),
 
-('Sarah', 'Kim', 'Flight Dispatcher', 'Operations', 62000, '2021-07-10', '01023456789', 'sarah.kim@airport.com', 'Active'),
+('John', 'Smith', 'Airport Manager', 'Administration', 85000, '2022-03-15', 'john.smith@airport.com', 'Active'),
 
-('David', 'Lee', 'Aircraft Technician', 'Maintenance', 58000, '2020-11-22', '01034567890', 'david.lee@airport.com', 'Active'),
+('Sarah', 'Kim', 'Flight Dispatcher', 'Operations', 62000, '2021-07-10', 'sarah.kim@airport.com', 'Active'),
 
-('Emily', 'Park', 'Customer Service Officer', 'Customer Support', 45000, '2023-01-05', '01045678901', 'emily.park@airport.com', 'Active'),
+('David', 'Lee', 'Aircraft Technician', 'Maintenance', 58000, '2020-11-22', 'david.lee@airport.com', 'Active'),
 
-('Michael', 'Brown', 'Security Officer', 'Security', 40000, '2022-09-18', '01056789012', 'michael.brown@airport.com', 'Active'),
+('Emily', 'Park', 'Customer Service Officer', 'Customer Support', 45000, '2023-01-05', 'emily.park@airport.com', 'Active'),
 
-('Jessica', 'Wang', 'HR Specialist', 'Human Resources', 52000, '2021-05-30', '01067890123', 'jessica.wang@airport.com', 'Active'),
+('Michael', 'Brown', 'Aircraft Technician', 'Maintenance', 60000, '2022-09-18', 'michael.brown@airport.com', 'Active'),
 
-('Daniel', 'Choi', 'Ground Staff', 'Operations', 38000, '2023-06-12', '01078901234', 'daniel.choi@airport.com', 'Active'),
+('Jessica', 'Wang', 'Pilot', 'Flight Operations', 125000, '2021-05-30', 'jessica.wang@airport.com', 'Active'),
 
-('Sophia', 'Kim', 'Ticketing Agent', 'Customer Support', 42000, '2022-12-01', '01089012345', 'sophia.kim@airport.com', 'Active');
+('Daniel', 'Choi', 'Pilot', 'Flight Operations', 118000, '2023-06-12', 'daniel.choi@airport.com', 'Active'),
+
+('Sophia', 'Kim', 'Flight Attendant', 'Cabin Crew', 52000, '2022-12-01', 'sophia.kim@airport.com', 'Active'),
+
+('James', 'Anderson', 'Flight Attendant', 'Cabin Crew', 50000, '2021-11-14', 'james.anderson@airport.com', 'Active'),
+
+('Olivia', 'Taylor', 'HR Specialist', 'Human Resources', 55000, '2020-08-22', 'olivia.taylor@airport.com', 'Active');
+
+
+
+-- Employee contact
+
+INSERT INTO EmployeeContact (
+    employee_id,
+    phone_number
+)
+VALUES
+
+(1, '01012345678'),
+(1, '01122223333'),
+
+(2, '01023456789'),
+
+(3, '01039336390'),
+(3, '01275755778'),
+
+(4, '01024254656'),
+
+(5, '01034567890'),
+
+(6, '01277778888'),
+
+(7, '01023456789'),
+
+(8, '01034567890'),
+
+(9, '01056781234'),
+
+(10, '01067892345');
 
 -- MODELS
 
@@ -177,6 +213,35 @@ VALUES
     141000,
     'Twin Engine',
     'France'
+);
+-- Airplane issues
+INSERT INTO AirplaneIssues (
+    airplane_id,
+    issue_type,
+    description,
+    issue_status,
+    issue_date,
+    resolved_date
+)
+
+VALUES
+
+(
+    2,
+    'Engine Inspection',
+    'Engine vibration detected',
+    'In Progress',
+    '2026-05-02',
+    NULL
+),
+
+(
+    4,
+    'Hydraulic Leak',
+    'Hydraulic pressure issue',
+    'Resolved',
+    '2026-04-15',
+    '2026-04-18'
 );
 -- Airplane
 INSERT INTO Airplane (
@@ -402,3 +467,75 @@ VALUES
     50,
     'Pending'
 );
+-- ============================================
+-- TECHNICIAN DATA
+-- ============================================
+
+INSERT INTO Technician (
+    employee_id,
+    AME_License
+)
+VALUES
+
+(3, 'AME-1001'),
+(5, 'AME-1002');
+
+
+
+-- ============================================
+-- FLIGHT CREW DATA
+-- ============================================
+
+INSERT INTO FlightCrew (
+    employee_id,
+    medical_examination_date,
+    crew_type
+)
+VALUES
+
+(6, '2026-01-15', 'Pilot'),
+
+(7, '2026-02-20', 'Pilot'),
+
+(8, '2026-03-01', 'Flight Attendant'),
+
+(9, '2026-03-12', 'Flight Attendant');
+
+
+
+-- ============================================
+-- PILOT DATA
+-- ============================================
+
+INSERT INTO Pilot (
+    employee_id,
+    PPL,
+    CPL,
+    IR,
+    MER,
+    airline_id
+)
+VALUES
+
+(6, TRUE, TRUE, TRUE, TRUE, 1),
+
+(7, TRUE, TRUE, TRUE, FALSE, 3);
+
+
+
+-- ============================================
+-- FLIGHT ATTENDANT DATA
+-- ============================================
+
+INSERT INTO FlightAttendant (
+    employee_id,
+    FA_License,
+    Height,
+    Weight,
+    airline_id
+)
+VALUES
+
+(8, 'FA-3001', 165.50, 55.00, 1),
+
+(9, 'FA-3002', 172.00, 68.00, 2);

@@ -4,12 +4,43 @@ include("../config/db.php");
 
 $id = $_GET['id'];
 
-// STEP 1: get current data
-$query = "SELECT * FROM Employee WHERE employee_id = $id";
+
+// ============================================
+// GET CURRENT EMPLOYEE DATA
+// ============================================
+
+$query = "
+
+SELECT
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    e.position,
+    e.department,
+    e.salary,
+    e.hire_date,
+    e.email,
+    e.employee_status,
+    ec.phone_number
+
+FROM Employee e
+
+LEFT JOIN EmployeeContact ec
+ON e.employee_id = ec.employee_id
+
+WHERE e.employee_id = $id
+
+";
+
 $result = mysqli_query($conn, $query);
+
 $employee = mysqli_fetch_assoc($result);
 
-// STEP 2: update on submit
+
+// ============================================
+// UPDATE EMPLOYEE
+// ============================================
+
 if(isset($_POST['update'])) {
 
     $first_name = $_POST['first_name'];
@@ -22,32 +53,95 @@ if(isset($_POST['update'])) {
     $email = $_POST['email'];
     $employee_status = $_POST['employee_status'];
 
-    $update = "
+
+    // ============================================
+    // UPDATE EMPLOYEE TABLE
+    // ============================================
+
+    $update_employee = "
+
     UPDATE Employee SET
+
         first_name = '$first_name',
         last_name = '$last_name',
         position = '$position',
         department = '$department',
         salary = '$salary',
         hire_date = '$hire_date',
-        phone_number = '$phone_number',
         email = '$email',
         employee_status = '$employee_status'
+
     WHERE employee_id = $id
+
     ";
 
-    mysqli_query($conn, $update);
+    mysqli_query($conn, $update_employee);
+
+
+    // ============================================
+    // UPDATE EMPLOYEE CONTACT TABLE
+    // ============================================
+
+    $check_contact = "
+
+    SELECT *
+    FROM EmployeeContact
+    WHERE employee_id = $id
+
+    ";
+
+    $contact_result = mysqli_query($conn, $check_contact);
+
+
+    if(mysqli_num_rows($contact_result) > 0) {
+
+        $update_contact = "
+
+        UPDATE EmployeeContact SET
+
+            phone_number = '$phone_number'
+
+        WHERE employee_id = $id
+
+        ";
+
+        mysqli_query($conn, $update_contact);
+
+    } else {
+
+        $insert_contact = "
+
+        INSERT INTO EmployeeContact (
+            employee_id,
+            phone_number
+        )
+
+        VALUES (
+            $id,
+            '$phone_number'
+        )
+
+        ";
+
+        mysqli_query($conn, $insert_contact);
+    }
+
 
     header("Location: view_employees.php");
+
 }
 
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <title>Edit Employee</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body class="bg-light">
@@ -60,47 +154,100 @@ if(isset($_POST['update'])) {
 
         <form method="POST">
 
-            <input type="text" name="first_name" class="form-control mb-2"
-                   value="<?php echo $employee['first_name']; ?>" required>
+            <input
+                type="text"
+                name="first_name"
+                class="form-control mb-2"
+                value="<?php echo $employee['first_name']; ?>"
+                required
+            >
 
-            <input type="text" name="last_name" class="form-control mb-2"
-                   value="<?php echo $employee['last_name']; ?>" required>
+            <input
+                type="text"
+                name="last_name"
+                class="form-control mb-2"
+                value="<?php echo $employee['last_name']; ?>"
+                required
+            >
 
-            <input type="text" name="position" class="form-control mb-2"
-                   value="<?php echo $employee['position']; ?>" required>
+            <input
+                type="text"
+                name="position"
+                class="form-control mb-2"
+                value="<?php echo $employee['position']; ?>"
+                required
+            >
 
-            <input type="text" name="department" class="form-control mb-2"
-                   value="<?php echo $employee['department']; ?>" required>
+            <input
+                type="text"
+                name="department"
+                class="form-control mb-2"
+                value="<?php echo $employee['department']; ?>"
+                required
+            >
 
-            <input type="number" name="salary" class="form-control mb-2"
-                   value="<?php echo $employee['salary']; ?>" required>
+            <input
+                type="number"
+                name="salary"
+                class="form-control mb-2"
+                value="<?php echo $employee['salary']; ?>"
+                required
+            >
 
-            <input type="date" name="hire_date" class="form-control mb-2"
-                   value="<?php echo $employee['hire_date']; ?>" required>
+            <input
+                type="date"
+                name="hire_date"
+                class="form-control mb-2"
+                value="<?php echo $employee['hire_date']; ?>"
+                required
+            >
 
-            <input type="text" name="phone_number" class="form-control mb-2"
-                   value="<?php echo $employee['phone_number']; ?>" required>
+            <input
+                type="text"
+                name="phone_number"
+                class="form-control mb-2"
+                value="<?php echo $employee['phone_number']; ?>"
+                required
+            >
 
-            <input type="email" name="email" class="form-control mb-2"
-                   value="<?php echo $employee['email']; ?>" required>
+            <input
+                type="email"
+                name="email"
+                class="form-control mb-2"
+                value="<?php echo $employee['email']; ?>"
+                required
+            >
 
             <select name="employee_status" class="form-control mb-3">
 
-                <option value="Active" <?php if($employee['employee_status']=="Active") echo "selected"; ?>>
+                <option
+                    value="Active"
+                    <?php if($employee['employee_status'] == "Active") echo "selected"; ?>
+                >
                     Active
                 </option>
 
-                <option value="Inactive" <?php if($employee['employee_status']=="Inactive") echo "selected"; ?>>
+                <option
+                    value="Inactive"
+                    <?php if($employee['employee_status'] == "Inactive") echo "selected"; ?>
+                >
                     Inactive
                 </option>
 
             </select>
 
-            <button type="submit" name="update" class="btn btn-success">
+            <button
+                type="submit"
+                name="update"
+                class="btn btn-success"
+            >
                 Update Employee
             </button>
 
-            <a href="view_employees.php" class="btn btn-secondary">
+            <a
+                href="view_employees.php"
+                class="btn btn-secondary"
+            >
                 Back
             </a>
 

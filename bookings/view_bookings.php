@@ -87,6 +87,7 @@ $result = mysqli_query($conn, $query);
             <th>Baggage</th>
             <th>Payment</th>
             <th>Booking Date</th>
+            <th>Actions</th>
 
         </tr>
 
@@ -137,6 +138,24 @@ $result = mysqli_query($conn, $query);
 
             <td>
                 <?php echo $row['booking_date']; ?>
+            </td>
+            <td>
+
+                <a
+                    href="edit_ticket.php?id=<?php echo $row['ticket_id']; ?>"
+                    class="btn btn-warning btn-sm"
+                >
+                    Edit
+                </a>
+
+                <a
+                    href="delete_ticket.php?id=<?php echo $row['ticket_id']; ?>"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure you want to delete this ticket?');"
+                >
+                Delete
+                </a>
+
             </td>
 
         </tr>

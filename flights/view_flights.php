@@ -86,6 +86,7 @@ $result = mysqli_query($conn, $query);
             <th>Status</th>
             <th>Price</th>
             <th>Seats</th>
+            <th>Actions</th>
 
         </tr>
 
@@ -96,7 +97,7 @@ $result = mysqli_query($conn, $query);
         <?php while($row = mysqli_fetch_assoc($result)) { ?>
 
         <tr>
-
+            
             <td>
                 <?php echo $row['flight_id']; ?>
             </td>
@@ -140,6 +141,25 @@ $result = mysqli_query($conn, $query);
             <td>
                 <?php echo $row['available_seats']; ?>
             </td>
+            <td>
+
+                <a
+                    href="edit_flight.php?id=<?php echo $row['flight_id']; ?>"
+                    class="btn btn-warning btn-sm"
+                    >
+                     Edit
+                 </a>
+
+                <a
+                    href="delete_flight.php?id=<?php echo $row['flight_id']; ?>"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure you want to delete this flight?');"
+                    >
+                    Delete
+                </a>
+
+            </td>
+
 
         </tr>
 

@@ -92,14 +92,13 @@ CREATE TABLE Airplane (
 -- =========================
 
 CREATE TABLE Employee (
-    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     position VARCHAR(100),
     department VARCHAR(100),
     salary DECIMAL(10,2),
     hire_date DATE,
-    phone_number VARCHAR(20),
     email VARCHAR(100),
     employee_status VARCHAR(20)
 );
@@ -109,7 +108,7 @@ CREATE TABLE Employee (
 -- =========================
 
 CREATE TABLE EmployeeContact (
-    employee_id VARCHAR(20),
+    employee_id INT,
     phone_number VARCHAR(20),
 
     PRIMARY KEY (employee_id, phone_number),
@@ -124,7 +123,7 @@ CREATE TABLE EmployeeContact (
 -- =========================
 
 CREATE TABLE Technician (
-    employee_id VARCHAR(20) PRIMARY KEY,
+    employee_id INT PRIMARY KEY,
     AME_License VARCHAR(50),
 
     FOREIGN KEY (employee_id)
@@ -137,11 +136,13 @@ CREATE TABLE Technician (
 -- =========================
 
 CREATE TABLE FlightCrew (
-    employee_id VARCHAR(20) PRIMARY KEY,
-    medical_examination_date DATE,
-    type VARCHAR(50),
+    employee_id INT PRIMARY KEY,
 
-    FOREIGN KEY (employee_idSN)
+    medical_examination_date DATE,
+
+    crew_type VARCHAR(50),
+
+    FOREIGN KEY (employee_id)
     REFERENCES Employee(employee_id)
     ON DELETE CASCADE
 );
@@ -151,10 +152,14 @@ CREATE TABLE FlightCrew (
 -- =========================
 
 CREATE TABLE FlightAttendant (
-    employee_id VARCHAR(20) PRIMARY KEY,
+    employee_id INT PRIMARY KEY,
+
     FA_License VARCHAR(50),
+
     Height DECIMAL(5,2),
+
     Weight DECIMAL(5,2),
+
     airline_id INT,
 
     FOREIGN KEY (employee_id)
@@ -194,15 +199,20 @@ CREATE TABLE Users (
 -- =========================
 
 CREATE TABLE Pilot (
-    SSN VARCHAR(20) PRIMARY KEY,
+    employee_id INT PRIMARY KEY,
+
     PPL BOOLEAN,
+
     CPL BOOLEAN,
+
     IR BOOLEAN,
+
     MER BOOLEAN,
+
     airline_id INT,
 
-    FOREIGN KEY (SSN)
-    REFERENCES FlightCrew(SSN)
+    FOREIGN KEY (employee_id)
+    REFERENCES FlightCrew(employee_id)
     ON DELETE CASCADE,
 
     FOREIGN KEY (airline_id)
@@ -332,4 +342,90 @@ CREATE TABLE Ticket (
 -- FLY
 -- =========================
 
+CREATE TABLE Fly (
 
+    flight_id INT,
+
+    customer_id INT,
+
+    airplane_id INT,
+
+    PRIMARY KEY (
+        flight_id,
+        customer_id,
+        airplane_id
+    ),
+
+    FOREIGN KEY (flight_id)
+    REFERENCES Flight(flight_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (customer_id)
+    REFERENCES Customer(customer_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (airplane_id)
+    REFERENCES Airplane(airplane_id)
+    ON DELETE CASCADE
+);
+
+-- =========================
+-- AIRPLANE ISSUES
+-- =========================
+
+
+CREATE TABLE AirplaneIssues (
+
+    issue_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    airplane_id INT,
+
+    issue_type VARCHAR(100),
+
+    description TEXT,
+
+    issue_date DATE,
+
+    resolved_date DATE,
+
+    issue_status ENUM(
+        'Open',
+        'In Progress',
+        'Resolved'
+    ) DEFAULT 'Open',
+
+    FOREIGN KEY (airplane_id)
+    REFERENCES Airplane(airplane_id)
+    ON DELETE CASCADE
+);
+
+-- =========================
+-- FIX
+-- =========================
+
+CREATE TABLE Fix (
+
+    fix_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    airplane_id INT,
+
+    employee_id INT,
+
+    issue_id INT,
+
+    fix_date DATE,
+
+    repair_notes TEXT,
+
+    FOREIGN KEY (airplane_id)
+    REFERENCES Airplane(airplane_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (employee_id)
+    REFERENCES Technician(employee_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (issue_id)
+    REFERENCES AirplaneIssues(issue_id)
+    ON DELETE CASCADE
+);

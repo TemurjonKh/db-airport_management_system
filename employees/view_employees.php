@@ -4,18 +4,24 @@ include("../includes/admin_only.php");
 include("../config/db.php");
 
 $query = "
+
 SELECT
-    employee_id,
-    first_name,
-    last_name,
-    position,
-    department,
-    salary,
-    hire_date,
-    phone_number,
-    email,
-    employee_status
-FROM Employee
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    e.position,
+    e.department,
+    e.salary,
+    e.hire_date,
+    ec.phone_number,
+    e.email,
+    e.employee_status
+
+FROM Employee e
+
+LEFT JOIN EmployeeContact ec
+ON e.employee_id = ec.employee_id
+
 ";
 
 $result = mysqli_query($conn, $query);
@@ -24,6 +30,7 @@ $result = mysqli_query($conn, $query);
 
 <!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Employees</title>
@@ -51,6 +58,7 @@ $result = mysqli_query($conn, $query);
         <thead class="table-dark">
 
         <tr>
+
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
@@ -62,6 +70,7 @@ $result = mysqli_query($conn, $query);
             <th>Email</th>
             <th>Status</th>
             <th>Actions</th>
+
         </tr>
 
         </thead>
@@ -72,46 +81,70 @@ $result = mysqli_query($conn, $query);
 
         <tr>
 
-            <td><?php echo $row['employee_id']; ?></td>
+            <td>
+                <?php echo $row['employee_id']; ?>
+            </td>
 
-            <td><?php echo $row['first_name']; ?></td>
+            <td>
+                <?php echo $row['first_name']; ?>
+            </td>
 
-            <td><?php echo $row['last_name']; ?></td>
+            <td>
+                <?php echo $row['last_name']; ?>
+            </td>
 
-            <td><?php echo $row['position']; ?></td>
+            <td>
+                <?php echo $row['position']; ?>
+            </td>
 
-            <td><?php echo $row['department']; ?></td>
+            <td>
+                <?php echo $row['department']; ?>
+            </td>
 
-            <td>$<?php echo $row['salary']; ?></td>
+            <td>
+                $<?php echo $row['salary']; ?>
+            </td>
 
-            <td><?php echo $row['hire_date']; ?></td>
+            <td>
+                <?php echo $row['hire_date']; ?>
+            </td>
 
-            <td><?php echo $row['phone_number']; ?></td>
+            <td>
+                <?php echo $row['phone_number']; ?>
+            </td>
 
-            <td><?php echo $row['email']; ?></td>
+            <td>
+                <?php echo $row['email']; ?>
+            </td>
 
-            <td><?php echo $row['employee_status']; ?></td>
+            <td>
+                <?php echo $row['employee_status']; ?>
+            </td>
+
             <td>
 
-            <a href="edit_employee.php?id=<?php echo $row['employee_id']; ?>"
-                class="btn btn-warning btn-sm">
-                Edit
-            </a>
+                <a
+                    href="edit_employee.php?id=<?php echo $row['employee_id']; ?>"
+                    class="btn btn-warning btn-sm"
+                >
+                    Edit
+                </a>
 
-            <a href="delete_employee.php?id=<?php echo $row['employee_id']; ?>"
-            class="btn btn-danger btn-sm"
-            onclick="return confirm('Are you sure you want to delete this employee?');">
-                Delete
-            </a>
+                <a
+                    href="delete_employee.php?id=<?php echo $row['employee_id']; ?>"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure you want to delete this employee?');"
+                >
+                    Delete
+                </a>
 
-        </td>
+            </td>
 
         </tr>
 
         <?php } ?>
 
         </tbody>
-        
 
     </table>
 

@@ -46,6 +46,7 @@ $result = mysqli_query($conn, $query);
                 <th>Headquarters</th>
                 <th>Founded</th>
                 <th>Total Airplanes</th>
+                <th>Actions</th>
             </tr>
 
         </thead>
@@ -82,6 +83,24 @@ $result = mysqli_query($conn, $query);
 
                 <td>
                     <?php echo $row['total_airplanes']; ?>
+                </td>
+                <td>
+
+                    <a
+                        href="edit_airline.php?id=<?php echo $row['airline_id']; ?>"
+                        class="btn btn-warning btn-sm"
+                    >
+                        Edit
+                    </a>
+
+                    <a
+                        href="delete_airline.php?id=<?php echo $row['airline_id']; ?>"
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('Are you sure you want to delete this airline?');"
+                    >
+                        Delete
+                    </a>
+
                 </td>
 
             </tr>
